@@ -1,6 +1,17 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link } from '@inertiajs/react';
-import { KpiStats, AarRecord, ProcessStep } from '@/types';
+import { KpiStats, ProcessStep } from '@/types';
+
+interface RecentRecord {
+    id: number;
+    process_step: ProcessStep;
+    process_label: string;
+    activity_date: string;
+    result: string | null;
+    result_label: string;
+    client_name: string;
+    opportunity_id: number;
+}
 
 interface Alert {
     id: number;
@@ -18,7 +29,7 @@ interface TeamRanking {
 
 interface Props {
     myStats: KpiStats;
-    recentRecords: AarRecord[];
+    recentRecords: RecentRecord[];
     alerts: Alert[];
     teamRanking?: TeamRanking[] | null;
 }
@@ -101,7 +112,7 @@ export default function Dashboard({ myStats, recentRecords, alerts, teamRanking 
                                             STEP{r.process_step}
                                         </span>
                                         <span className="text-gray-500 text-xs">{r.activity_date}</span>
-                                        <span className="text-gray-800 truncate flex-1">{r.opportunity.client_name ?? r.opportunity.title}</span>
+                                        <span className="text-gray-800 truncate flex-1">{r.client_name}</span>
                                         {r.result && (
                                             <span className={`text-xs px-2 py-0.5 rounded-full ${RESULT_COLORS[r.result]}`}>
                                                 {r.result_label}

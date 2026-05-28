@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\AarRecordController;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AnalysisController;
 use App\Http\Controllers\Auth\AzureAuthController;
+use App\Http\Controllers\ClientController;
 use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -39,13 +41,27 @@ Route::middleware(['auth'])->group(function () {
     // チームDB
     Route::get('/team-db', [AarRecordController::class, 'teamDb'])->name('team-db.index');
 
-    // 分析（マネージャー以上 or viewer）
-    Route::get('/analysis', [AnalysisController::class, 'index'])
-        ->name('analysis.index')
-        ->middleware('can:view-analysis');
+    // 分析（全ロール）
+    Route::get('/analysis', [AnalysisController::class, 'index'])->name('analysis.index');
+
+    // マスター管理（全ロール）
+    Route::prefix('master')->name('master.')->group(function () {
+        Route::get('/clients', [ClientController::class, 'index'])->name('clients.index');
+        Route::post('/clients', [ClientController::class, 'store'])->name('clients.store');
+        Route::put('/clients/{client}', [ClientController::class, 'update'])->name('clients.update');
+        Route::delete('/clients/{client}', [ClientController::class, 'destroy'])->name('clients.destroy');
+    });
 
     // 管理（admin のみ）
     Route::middleware('can:admin')->prefix('admin')->name('admin.')->group(function () {
-        Route::get('/', fn() => Inertia::render('Admin/Index'))->name('index');
+        Route::get('/', [AdminController::class, 'index'])->name('index');
+        // 部署
+        Route::post('/departments', [AdminController::class, 'storeDepartment'])->name('departments.store');
+        Route::put('/departments/{department}', [AdminController::class, 'updateDepartment'])->name('departments.update');
+        Route::delete('/departments/{department}', [AdminController::class, 'destroyDepartment'])->name('departments.destroy');
+        // 社員
+        Route::post('/users', [AdminController::class, 'storeUser'])->name('users.store');
+        Route::put('/users/{user}', [AdminController::class, 'updateUser'])->name('users.update');
+        Route::delete('/users/{user}', [AdminController::class, 'destroyUser'])->name('users.destroy');
     });
 });

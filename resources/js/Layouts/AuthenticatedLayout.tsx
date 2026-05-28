@@ -13,7 +13,8 @@ export default function Authenticated({ header, children }: PropsWithChildren<{ 
         { label: 'AAR記録', route: 'aar.create' },
         { label: 'マイ記録', route: 'my-records.index' },
         { label: 'チームDB', route: 'team-db.index' },
-        ...(user.role !== 'sales' ? [{ label: '分析', route: 'analysis.index' }] : []),
+        { label: '分析', route: 'analysis.index' },
+        { label: '取引先', route: 'master.clients.index' },
         ...(user.role === 'admin' ? [{ label: '管理', route: 'admin.index' }] : []),
     ];
 

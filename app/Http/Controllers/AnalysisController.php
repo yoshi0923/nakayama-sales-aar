@@ -52,11 +52,8 @@ class AnalysisController extends Controller
         // 月次プロセス別カード数（直近12ヶ月）
         $monthlyChart = $this->calcMonthlyChart($allReal);
 
-        // 担当者別成績（マネージャー以上）
-        $userRanking = null;
-        if ($user->isManager()) {
-            $userRanking = $this->calcUserRanking($allReal);
-        }
+        // 担当者別成績（全ロール）
+        $userRanking = $this->calcUserRanking($allReal);
 
         // 支店別プロセス別内訳テーブル
         $branchTable = $this->calcBranchTable($allReal);
